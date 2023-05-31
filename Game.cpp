@@ -1,6 +1,10 @@
 #include <stdio.h>
+#include <SDL.h>
 
 #include "Game.h"
+
+SDL_Window* Game::gameWindow = nullptr;
+SDL_Renderer* Game::gameRenderer = nullptr;
 
 bool Game::init()
 {
@@ -16,8 +20,7 @@ bool Game::init()
 	else
 	{
 		// Create window
-		gameWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-		printf("here");
+		gameWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN); 
 		if (gameWindow == NULL)
 		{
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
@@ -27,7 +30,6 @@ bool Game::init()
 		{
 			// Create renderer for window
 			gameRenderer = SDL_CreateRenderer(gameWindow, -1, SDL_RENDERER_ACCELERATED);
-			printf("here");
 			if (gameRenderer == NULL)
 			{
 				printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
