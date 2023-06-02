@@ -23,9 +23,15 @@ int main(int argc, char* args[])
 		// Event handler
 		SDL_Event e;
 
+		// instantiate grid obj and create
+		Grid grid = Grid();
+
 		//While application is running
 		while (!quit)
 		{
+			// do stuff here
+			SDL_RenderPresent(Game::gameRenderer);
+
 			// Handle events on queue until we get to end of queue
 			while (SDL_PollEvent(&e) != 0)
 			{
@@ -35,6 +41,7 @@ int main(int argc, char* args[])
 					quit = true;
 				}
 			}
+
 		}
 	}
 	// Free resources and close SDL

@@ -5,27 +5,27 @@
 
 class Cell
 {
+	friend class Grid;
+
 private:
 
 	int cell_size = 36;
 	int x;
 	int y;
 
-	SDL_Rect rect;
-	SDL_Colour colour;
-
-public:
-
-	// TODO - make private, setter function
 	bool wall = false;
 	bool visited = false;
 	bool finish = false;
+
+	SDL_Rect rect;
+	SDL_Colour colour;
 
 	void draw(SDL_Colour colour);
 
 	Cell(int x, int y, SDL_Colour colour);
 
-	Cell() { /* default constructor to appease VS */ };
+	Cell() {}
+
 };
 
 class Grid
@@ -39,7 +39,17 @@ private:
 	// main grid 
 	Cell grid[width][height];
 
+	void create();
+
+	void maze();
+
 public:
 
-	Grid();
+	Grid()
+	{	
+		create();
+		//maze();
+	};
+
 };
+

@@ -1,4 +1,7 @@
+#include <iostream>
+#include <stack>
 #include <vector>
+#include <cstdlib>
 
 #include <SDL.h>
 
@@ -31,42 +34,98 @@ Cell::Cell(int x, int y, SDL_Colour colour) :
 
 void Cell::draw(SDL_Colour colour)
 {
-	SDL_SetRenderDrawColor(Game::gameRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	SDL_SetRenderDrawColor(Game::gameRenderer, colour.r, colour.g, colour.b, colour.a);
 	SDL_RenderFillRect(Game::gameRenderer, &this->rect);
+	SDL_RenderDrawRect(Game::gameRenderer, &this->rect);
 };
-
+	
 // Grid constructor
-Grid::Grid()
+void Grid::create()
 {
 	// FLAG - for a solid black (wall) column.
-	bool solid = true;
+	bool solid = false;
 
 	// WIDTH - each iteration is one column
-	for (int x = 0; x < this->width; x++)
+	for (int x = 0; x < width; x++)
 	{
 		// FLAG - for a black (wall) cell
 		bool wall = false;
 
 		// HEIGHT - each iteration is one cell in a column
-		for (int y = 0; y < this->height; y++)
+		for (int y = 0; y < height; y++)
 		{
-			// instantiate the cell
 			Cell cell(x, y, WHITE);
 
-			if (y == 0 || y == this->width - 1 || x == 0 || x == this->width - 1)
+			if (y == 0 || y == width - 1)
 			{
 				cell.draw(RED);
 				cell.visited = true;
 				cell.wall = true;
 			}
-			else if (solid == true || wall == true)
+			else
 			{
-				cell.draw(BLACK);
-				cell.wall = true;
+				if (solid || wall)
+				{
+					cell.draw(BLACK);
+					cell.wall = true;
+				}
+				if (x == 0 || x == width - 1)
+				{
+					cell.draw(RED);
+					cell.visited = true;
+					cell.wall = true;
+				}
 			}
+
+			SDL_RenderPresent(Game::gameRenderer);
+
 			wall = !wall;
+
 			grid[x][y] = cell;
 		}
 		solid = !solid;
+	}
+}
+
+// recursive backtracking
+void Grid::maze()
+{
+	// .push() | .pop() | .empty() | .top()
+	std::stack<Cell> cell_stack;
+
+	// init cell_stack with a random cell from the grid
+	cell_stack.push(this->grid[rand() % (width / 2 - 1) * 2 + 2][rand() % (height / 2 - 1) * 2 + 2]);
+
+	bool drawing_maze = true;
+
+	// recursively backtrack
+	while (drawing_maze)
+	{
+		Cell startcell = cell_stack.top();
+
+		int x = startcell.x;
+		int y = startcell.y;
+
+		// white cells we can jump to, and the black walls inbetween.
+		std::vector<Cell> possible_paths;
+		std::vector<Cell> possible_walls;
+
+		if (!&this->grid[x + 2][y].wall && !&this->grid[x + 2][y].visited)
+		{
+			Cell& cell = this->grid[x + 2][y];
+		}
+		if (!&this->grid[x - 2][y].wall && !&this->grid[x - 2][y].visited)
+		{
+			Cell& cell = this->grid[x - 2][y];
+		}
+		if (!&this->grid[x][y + 2].wall && !&this->grid[x][y + 2].visited)
+		{
+			Cell& cell = this->grid[x][y + 2];
+		}
+		if (!&this->grid[x][y - 2].wall && !&this->grid[x - 2][y].visited)
+		{
+			Cell& cell = this->grid[x][y - 2];
+		}
+		
 	}
 }
