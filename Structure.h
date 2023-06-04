@@ -25,7 +25,6 @@ private:
 	Cell(int x, int y, SDL_Colour colour);
 
 	Cell() {}
-
 };
 
 class Grid
@@ -36,7 +35,7 @@ private:
 	static const int width = 25;
 	static const int height = 25;
 
-	// main grid 
+	// main grid
 	Cell grid[width][height];
 
 	void create();
@@ -48,8 +47,6 @@ public:
 	Grid()
 	{	
 		create();
-		//maze();
+		maze();
 	};
-
 };
-

@@ -29,7 +29,6 @@ int main(int argc, char* args[])
 		//While application is running
 		while (!quit)
 		{
-			// do stuff here
 			SDL_RenderPresent(Game::gameRenderer);
 
 			// Handle events on queue until we get to end of queue
