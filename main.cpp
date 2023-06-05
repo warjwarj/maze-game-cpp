@@ -1,47 +1,54 @@
-#include <SDL.h>
-#include <stdio.h>
+#include <iostream>
 #include <string>
 #include <cmath>
+
+#include <SDL.h>
 
 #include "Game.h"
 #include "Structure.h"
 
-/* TRY AND SEPERATE CONSTRUCTOR FROM INITIALISATION OF GRID + CELL */
-
 int main(int argc, char* args[])
 {
-	// Start up SDL and create window
-	if (!Game::init())
+	try
 	{
-		printf("Failed to initialise\n");
-	}
-	else
-	{
-		// Main loop flag
-		bool quit = false;
-
-		// Event handler
-		SDL_Event e;
-
-		// instantiate grid obj and create
-		Grid grid = Grid();
-
-		//While application is running
-		while (!quit)
+		// Start up SDL and create window
+		if (!Game::init())
 		{
-			SDL_RenderPresent(Game::gameRenderer);
+			std::cout << "Failed to init!" << std::endl;
+		}
+		else
+		{
+			// Main loop flag
+			bool quit = false;
 
-			// Handle events on queue until we get to end of queue
-			while (SDL_PollEvent(&e) != 0)
+			// Event handler
+			SDL_Event e;
+
+			// instantiate grid obj and create
+			Grid grid = Grid();
+
+			//While application is running
+			while (!quit)
 			{
-				// User requests quit
-				if (e.type == SDL_QUIT)
+				SDL_RenderPresent(Game::gameRenderer);
+
+				// Handle events on queue until we get to end of queue
+				while (SDL_PollEvent(&e) != 0)
 				{
-					quit = true;
+					// User requests quit
+					if (e.type == SDL_QUIT)
+					{
+						quit = true;
+					}
 				}
 			}
-
 		}
+	}
+	// test for intentional error thrown when user quits game
+	catch (StackUnwind errmsg) {
+		std::cerr << errmsg.what() << std::endl;
+		Game::close();
+		return 0;
 	}
 	// Free resources and close SDL
 	Game::close();

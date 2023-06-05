@@ -78,8 +78,7 @@ void Grid::create()
 					cell.wall = true;
 				}
 			}
-
-			SDL_RenderPresent(Game::gameRenderer);
+			//Game::checkQuit();
 
 			wall = !wall;
 
@@ -105,11 +104,16 @@ void Grid::maze()
 
 	bool drawing_maze = true;
 
+	int x;
+	int y;
+
+	int r;
+
 	// recursive backtracker
 	while (drawing_maze)
 	{
-		int x = cell_stack.top()->x;
-		int y = cell_stack.top()->y;
+		x = cell_stack.top()->x;
+		y = cell_stack.top()->y;
 
 		possible_paths.clear();
 		possible_walls.clear();
@@ -146,7 +150,7 @@ void Grid::maze()
 		if (!possible_paths.empty())
 		{
 			// random index in possible_paths
-			int r = rand() % possible_paths.size();
+			r = rand() % possible_paths.size();
 
 			// random cell to jump to next
 			cell_stack.push(&possible_paths[r].get());
@@ -166,5 +170,7 @@ void Grid::maze()
 			}
 		}
 		SDL_RenderPresent(Game::gameRenderer);
+
+		Game::checkQuit();
 	}
 }

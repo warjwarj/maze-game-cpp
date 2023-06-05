@@ -1,4 +1,7 @@
 #include <iostream>
+#include <stdlib.h>
+#include <exception>
+
 #include <SDL.h>
 
 #include "Game.h"
@@ -20,7 +23,7 @@ bool Game::init()
 	else
 	{
 		// Create window
-		gameWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN); 
+		gameWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (gameWindow == NULL)
 		{
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
@@ -43,7 +46,17 @@ bool Game::init()
 		}
 	}
 	return success;
-}
+};
+
+void Game::checkQuit()
+{
+	
+
+	if (false)
+	{
+		throw StackUnwind("program terminated by stack unwind in function Game::checkQuit");
+	}
+};
 
 void Game::close()
 {
@@ -56,4 +69,4 @@ void Game::close()
 
 	// Quit SDL subsystems
 	SDL_Quit();
-}
+};
