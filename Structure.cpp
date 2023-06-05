@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdlib>
 #include <random>
+#include <functional>
 
 #include <SDL.h>
 
@@ -91,95 +92,72 @@ void Grid::create()
 // recursive backtracking
 void Grid::maze()
 {
-	// .push() | .pop() | .empty() | .top()
-	std::stack<Cell> cell_stack;
-
+	// get different number every time
 	srand(time(NULL));
 
 	// init cell_stack with a random cell from the grid
-	cell_stack.push(this->grid[rand() % (width / 2 - 1) * 2 + 2][rand() % (height / 2 - 1) * 2 + 2]);
+	std::stack<Cell*> cell_stack;
+	cell_stack.push(&this->grid[rand() % (width / 2 - 1) * 2 + 2][rand() % (height / 2 - 1) * 2 + 2]);
+
+	// white cells we can jump to, and the black walls inbetween.
+	std::vector<std::reference_wrapper<Cell>> possible_paths;
+	std::vector<std::reference_wrapper<Cell>> possible_walls;
 
 	bool drawing_maze = true;
 
-	// recursively backtrack
+	// recursive backtracker
 	while (drawing_maze)
 	{
-		Cell& startcell = cell_stack.top();
+		int x = cell_stack.top()->x;
+		int y = cell_stack.top()->y;
 
-		std::cout << "startcell visisted before path selection: " << startcell.visited << std::endl;
+		possible_paths.clear();
+		possible_walls.clear();
 
-		int x = startcell.x;
-		int y = startcell.y;
-
-		// white cells we can jump to, and the black walls inbetween.
-		std::vector<Cell> possible_paths;
-		std::vector<Cell> possible_walls;
-
-		if (x + 2 < sizeof(&this->grid)) {
-			Cell &path = this->grid[x + 2][y];
-			Cell &wall = this->grid[x + 1][y];
-			if (!path.visited) {
-				std::cout << "path visited: " << path.visited << std::endl;
-				possible_paths.push_back(path);
-				possible_walls.push_back(wall);
+		// check index is in bounds
+		if (x + 2 < sizeof(this->grid)) {
+			if (!this->grid[x + 2][y].visited) {
+				possible_paths.push_back(this->grid[x + 2][y]);
+				possible_walls.push_back(this->grid[x + 1][y]);
 			}
 		}
 		if (x - 2 > 0) {
-			Cell &path = this->grid[x - 2][y];
-			Cell &wall = this->grid[x - 1][y];
-			if (!path.visited) {
-				std::cout << "path visited: " << path.visited << std::endl;
-				possible_paths.push_back(path);
-				possible_walls.push_back(wall);
+			if (!this->grid[x - 2][y].visited) {
+				possible_paths.push_back(this->grid[x - 2][y]);
+				possible_walls.push_back(this->grid[x - 1][y]);
 			}
 		}
-		if (y + 2 < sizeof(&this->grid)) {
-			Cell &path = this->grid[x][y + 2];
-			Cell &wall = this->grid[x][y + 1];
-			if (!path.visited) {
-				std::cout << "path visited: " << path.visited << std::endl;
-				possible_paths.push_back(path);
-				possible_walls.push_back(wall);
+		if (y + 2 < sizeof(this->grid)) {
+			if (!this->grid[x][y + 2].visited) {
+				possible_paths.push_back(this->grid[x][y + 2]);
+				possible_walls.push_back(this->grid[x][y + 1]);
 			}
 		}
 		if (y - 2 > 0) {
-			Cell &path = this->grid[x][y - 2];
-			Cell &wall = this->grid[x][y - 1];
-			if (!path.visited) {
-				std::cout << "path visited: " << path.visited << std::endl;
-				possible_paths.push_back(path);
-				possible_walls.push_back(wall);
+			if (!this->grid[x][y - 2].visited) {
+				possible_paths.push_back(this->grid[x][y - 2]);
+				possible_walls.push_back(this->grid[x][y - 1]);
 			}
 		}
+
+		cell_stack.top()->visited = true;
 
 		// continue down branch
 		if (!possible_paths.empty())
 		{
-			//std::cout << "possible_paths is not empty." << " " << possible_paths.size() << std::endl;
-
-			std::random_device rd; // obtain a random number from hardware
-			std::mt19937 gen(rd()); // seed the generator
-			std::uniform_int_distribution<> distr(0, possible_paths.size() - 1); // define the range
-
-			int r = distr(gen);
-
-			Cell& path = possible_paths[r];
-			Cell& wall = possible_walls[r];
+			// random index in possible_paths
+			int r = rand() % possible_paths.size();
 
 			// random cell to jump to next
-			cell_stack.push(path);
+			cell_stack.push(&possible_paths[r].get());
 
-			wall.draw(WHITE);
-			wall.wall = false;
-
-			startcell.visited = true;
-			std::cout << "startcell visited after path selction: " << startcell.visited << std::endl;
+			// make the cell white and turn it into a path
+			possible_walls[r].get().draw(WHITE);
+			possible_walls[r].get().wall = false;
 		}
 		// backtrack to last diversion
 		else
 		{
-			//std::cout << "possible_paths is empty." << std::endl;
-
 			cell_stack.pop();
 
 			if (cell_stack.empty())
