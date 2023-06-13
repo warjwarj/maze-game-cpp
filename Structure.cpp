@@ -10,15 +10,6 @@
 #include "Structure.h"
 #include "Game.h"
 
-SDL_Color BLACK = { 0, 0, 0 ,255 };
-SDL_Color WHITE = { 255, 255, 255 ,255 };
-SDL_Color RED = { 222, 90, 67 ,255 };
-SDL_Color DARK_BLUE = { 15, 99, 255 ,255 };
-SDL_Color GREY = { 92, 92, 92 ,255 };
-SDL_Color LIGHTER_GREY = { 145, 145, 145 ,255 };
-SDL_Color GREEN = { 145, 145, 145 ,255 };
-
-
 // Cell constructor
 Cell::Cell(int x, int y, SDL_Colour colour) :
 	y(y),
@@ -32,7 +23,6 @@ Cell::Cell(int x, int y, SDL_Colour colour) :
 
 	this->draw(colour);
 };
-
 
 void Cell::draw(SDL_Colour colour)
 {
@@ -78,6 +68,7 @@ void Grid::create()
 					cell.wall = true;
 				}
 			}
+			//std::cout << cell.x << " " << cell.y << std::endl;
 			//Game::checkQuit();
 
 			wall = !wall;

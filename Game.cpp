@@ -48,13 +48,12 @@ bool Game::init()
 	return success;
 };
 
+// TODO
 void Game::checkQuit()
 {
-	
-
 	if (false)
 	{
-		throw StackUnwind("program terminated by stack unwind in function Game::checkQuit");
+		throw StackUnwind("program terminated in function Game::checkQuit");
 	}
 };
 
