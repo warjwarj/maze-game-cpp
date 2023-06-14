@@ -68,7 +68,13 @@ void Grid::create()
 					cell.wall = true;
 				}
 			}
-			//std::cout << cell.x << " " << cell.y << std::endl;
+			// draw finish cell green
+			if (x == width - 3 && y == height - 3)
+			{
+				cell.finish = true;
+				cell.draw(GREEN);
+			}
+
 			//Game::checkQuit();
 
 			wall = !wall;
@@ -149,6 +155,8 @@ void Grid::maze()
 			// make the cell white and turn it into a path
 			possible_walls[r].get().draw(WHITE);
 			possible_walls[r].get().wall = false;
+
+			continue;
 		}
 		// backtrack to last diversion
 		else

@@ -28,10 +28,8 @@ int main(int argc, char* args[])
 			// instantiate grid obj and create
 			Grid grid = Grid();
 
-			/*Cell** grid = grid.grid;*/
-
 			// player
-			Player player = Player(&(grid.grid));
+			Player player = Player(grid.grid);
 
 			//While application is running
 			while (!quit)

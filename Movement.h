@@ -11,21 +11,20 @@ private:
 
 	Cell cell;
 
-	Cell** grid;
-
 	// dictionary of cells the player can move to
 	std::map<Vector, Cell> movements;
 
 	// helper function used in getMovements
-	Cell getFurthestCellInDirection(Vector vector, Cell** grid, Cell cell);
+	Cell getFurthestReachableCellInDirection(Vector vector, Cell grid[][Grid::height]);
 
 	// check that we can move in the specified direction
-	void getMovements(Vector vector, Cell** grid);
+	void getMovements(Cell grid[][Grid::height]);
 
 	// guess what
-	void move(Vector vector);
+	void move(Vector vector, Cell grid[][Grid::height]);
 
 public:
 
-	Player(Cell (*grid)[Grid::width][Grid::height]);
+	// representation of a 2d array in a function param list, dont need to specify the length the first dimension, as it is deduced by the compiler.
+	Player(Cell grid[][Grid::height]);
 };

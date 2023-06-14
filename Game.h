@@ -26,6 +26,7 @@ enum Vector
 	down_max,
 	left_max,
 	right_max,
+	none
 };
 
 static SDL_Color BLACK = { 0, 0, 0 ,255 };
@@ -34,7 +35,7 @@ static SDL_Color RED = { 222, 90, 67 ,255 };
 static SDL_Color DARK_BLUE = { 15, 99, 255 ,255 };
 static SDL_Color GREY = { 92, 92, 92 ,255 };
 static SDL_Color LIGHTER_GREY = { 145, 145, 145 ,255 };
-static SDL_Color GREEN = { 145, 145, 145 ,255 };
+static SDL_Color GREEN = { 28, 252, 3 ,255 };
 
 class StackUnwind : public std::exception
 {
