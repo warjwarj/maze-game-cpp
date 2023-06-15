@@ -39,10 +39,78 @@ int main(int argc, char* args[])
 				// Handle events on queue until we get to end of queue
 				while (SDL_PollEvent(&e) != 0)
 				{
-					// User requests quit
-					if (e.type == SDL_QUIT)
+					switch (e.type)
 					{
+					case SDL_QUIT:
+
 						quit = true;
+						break;
+
+					case SDL_KEYDOWN:
+
+						switch (e.key.keysym.sym)
+						{
+						case SDLK_UP:
+
+							if (e.key.keysym.mod & KMOD_SHIFT)
+							{
+								player.move(up_max, grid.grid);
+								break;
+							}
+							else
+							{
+								player.move(up_one, grid.grid);
+								break;
+							}
+
+						case SDLK_DOWN:
+
+							if (e.key.keysym.mod & KMOD_SHIFT)
+							{
+								player.move(down_max, grid.grid);
+								break;
+							}
+							else
+							{
+								player.move(down_one, grid.grid);
+								break;
+							}
+
+						case SDLK_LEFT:
+
+							if (e.key.keysym.mod & KMOD_SHIFT)
+							{
+								player.move(left_max, grid.grid);
+								break;
+							}
+							else
+							{
+								player.move(left_one, grid.grid);
+								break;
+							}
+
+						case SDLK_RIGHT:
+
+							if (e.key.keysym.mod & KMOD_SHIFT)
+							{
+								player.move(right_max, grid.grid);
+								break;
+							}
+							else
+							{
+								player.move(right_one, grid.grid);
+								break;
+							}
+
+						default:
+							
+							// no arrow keys pressed
+							break;
+						}
+					default:
+
+						// no events
+						break;
 					}
 				}
 			}
