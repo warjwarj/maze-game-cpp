@@ -10,28 +10,28 @@
 
 int main(int argc, char* args[])
 {
-	try
+	// Start up SDL and create window
+	if (!Game::init())
 	{
-		// Start up SDL and create window
-		if (!Game::init())
-		{
-			std::cout << "Failed to init!" << std::endl;
-		}
-		else
-		{
-			// Main loop flag
-			bool quit = false;
+		std::cout << "Failed to init!" << std::endl;
+	}
+	else
+	{
+		// Main loop flag
+		bool quit = false;
 
-			// Event handler
-			SDL_Event e;
+		// Event handler
+		SDL_Event e;
 
+		//While application is running
+		while (!quit)
+		{
 			// instantiate grid obj and create
 			Grid grid = Grid();
 
 			// player
 			Player player = Player(grid.grid);
 
-			//While application is running
 			while (!quit)
 			{
 				SDL_RenderPresent(Game::gameRenderer);
@@ -103,8 +103,9 @@ int main(int argc, char* args[])
 							}
 
 						default:
-							
+
 							// no arrow keys pressed
+							std::cout << "press an arow key to move" << std::endl;
 							break;
 						}
 					default:
@@ -113,14 +114,13 @@ int main(int argc, char* args[])
 						break;
 					}
 				}
+				if (player.atfinish())
+				{
+					std::cout << player.atfinish() << std::endl;
+					break;
+				}
 			}
 		}
-	}
-	// test for intentional error thrown when user quits game
-	catch (StackUnwind errmsg) {
-		std::cerr << errmsg.what() << std::endl;
-		Game::close();
-		return 0;
 	}
 	// Free resources and close SDL
 	Game::close();

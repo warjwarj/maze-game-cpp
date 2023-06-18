@@ -48,15 +48,6 @@ bool Game::init()
 	return success;
 };
 
-// TODO
-void Game::checkQuit()
-{
-	if (false)
-	{
-		throw StackUnwind("program terminated in function Game::checkQuit");
-	}
-};
-
 void Game::close()
 {
 	// Destroy window	

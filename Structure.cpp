@@ -169,7 +169,5 @@ void Grid::maze()
 			}
 		}
 		SDL_RenderPresent(Game::gameRenderer);
-
-		Game::checkQuit();
 	}
 }

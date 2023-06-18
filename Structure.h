@@ -60,6 +60,8 @@ public:
 
 	bool iswall() { return this->wall;  }
 
+	bool isfinish() { return this->finish;  }
+
 	int x;
 	int y;
 };

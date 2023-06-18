@@ -6,20 +6,20 @@
 
 Player::Player(Cell grid[][Grid::height])
 {
-	//for (int i=0; i < Grid::width; i++)
-	//{
-	//	for (int j=0; j < Grid::height; j++)
-	//	{
-	//		std::cout << grid[i][j].x << " " << grid[i][j].y << std::endl;
-	//	}
-	//}
-
 	this->cell = grid[2][2];
 	this->move(none, grid);
 }
 
 void Player::move(Vector vector, Cell grid[][Grid::height])
 {
+	// remove old movement hint squares and also blue square
+	for (auto& i : this->movements)
+	{
+		std::get<1>(i).draw(WHITE);
+	}
+	this->cell.draw(WHITE);
+
+	// make chosen movement the current cell
 	if (vector != none)
 	{
 		if (this->movements.count(vector) != 0)
@@ -31,8 +31,10 @@ void Player::move(Vector vector, Cell grid[][Grid::height])
 			std::cout << "you cannot move in that direction" << std::endl;
 		}
 	}
-	this->cell.draw(DARK_BLUE);
+
+	// redraw and get new cell's possible movements
 	this->getMovements(grid);
+	this->cell.draw(DARK_BLUE);
 }
 
 Cell Player::getFurthestReachableCellInDirection(Vector vector, Cell grid[][Grid::height])
