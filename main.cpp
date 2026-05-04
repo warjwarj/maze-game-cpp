@@ -5,11 +5,16 @@
 #include <SDL.h>
 
 #include "Game.h"
-#include "Structure.h"
-#include "Movement.h"
+#include "Grid.h"
+#include "Player.h"
 
 int main(int argc, char* args[])
 {
+	SDL_DisplayMode DM;
+	SDL_GetCurrentDisplayMode(0, &DM);
+	auto Width = DM.w;
+	auto Height = DM.h;
+
 	// Start up SDL and create window
 	if (!Game::init())
 	{

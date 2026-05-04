@@ -2,8 +2,10 @@
 
 #include <map>
 
-#include "Structure.h"
+#include "Cell.h"
 #include "Game.h"
+#include "Grid.h"
+
 
 class Player
 {

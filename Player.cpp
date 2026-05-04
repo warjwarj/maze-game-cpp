@@ -1,8 +1,9 @@
 
 #include <iostream>
 
-#include "Movement.h"
-#include "Game.h";
+#include "Cell.h"
+#include "Grid.h"
+#include "Player.h"
 
 Player::Player(Cell grid[][Grid::height])
 {
