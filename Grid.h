@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include "Cell.h"
 
 class Grid
@@ -16,11 +17,10 @@ private:
 
 	void maze();
 
-
 public:
 
 	// main grid
-	Cell grid[width][height];
+	std::vector<std::vector<Cell>> grid;
 
 	Grid()
 	{

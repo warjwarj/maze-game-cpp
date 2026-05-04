@@ -17,11 +17,11 @@ private:
 	SDL_Rect rect;
 	SDL_Colour colour;
 
-	Cell(int x, int y, SDL_Colour colour);
 
 public:
 
-	Cell() {}
+	Cell(int x, int y, SDL_Colour colour);
+	Cell() = default;
 
 	void draw(SDL_Colour colour);
 

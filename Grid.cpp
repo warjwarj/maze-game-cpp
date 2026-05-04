@@ -13,20 +13,15 @@
 // Grid constructor
 void Grid::create()
 {
-	// FLAG - for a solid black (wall) column.
 	bool solid = false;
-
-	// WIDTH - each iteration is one column
 	for (int x = 0; x < width; x++)
 	{
-		// FLAG - for a black (wall) cell
 		bool wall = false;
-
-		// HEIGHT - each iteration is one cell in a column
+		grid.emplace_back();
 		for (int y = 0; y < height; y++)
 		{
-			Cell cell(x, y, WHITE);
-
+			grid[x].emplace_back(x, y, WHITE);
+			Cell& cell = grid[x][y];
 			if (y == 0 || y == width - 1)
 			{
 				cell.draw(RED);
@@ -47,18 +42,12 @@ void Grid::create()
 					cell.wall = true;
 				}
 			}
-			// draw finish cell green
 			if (x == width - 3 && y == height - 3)
 			{
 				cell.finish = true;
 				cell.draw(GREEN);
 			}
-
-			//Game::checkQuit();
-
 			wall = !wall;
-
-			grid[x][y] = cell;
 		}
 		solid = !solid;
 	}

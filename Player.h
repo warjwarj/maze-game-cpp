@@ -17,18 +17,18 @@ private:
 	std::map<Vector, Cell> movements;
 
 	// helper function used in getMovements
-	Cell getFurthestReachableCellInDirection(Vector vector, Cell grid[][Grid::height]);
+	Cell getFurthestReachableCellInDirection(Vector vector, std::vector<std::vector<Cell>>);
 
 	// check that we can move in the specified direction
-	void getMovements(Cell grid[][Grid::height]);
+	void getMovements(std::vector<std::vector<Cell>>);
 
 public:
 
 	// guess what
-	void move(Vector vector, Cell grid[][Grid::height]);
+	void move(Vector vector, std::vector<std::vector<Cell>>);
 
 	bool atfinish() { return this->cell.isfinish(); }
 
 	// representation of a 2d array in a function param list, dont need to specify the length the first dimension, as it is deduced by the compiler.
-	Player(Cell grid[][Grid::height]);
+	Player(std::vector<std::vector<Cell>>);
 };

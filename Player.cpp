@@ -5,13 +5,13 @@
 #include "Grid.h"
 #include "Player.h"
 
-Player::Player(Cell grid[][Grid::height])
+Player::Player(std::vector<std::vector<Cell>> grid)
 {
 	this->cell = grid[2][2];
 	this->move(none, grid);
 }
 
-void Player::move(Vector vector, Cell grid[][Grid::height])
+void Player::move(Vector vector, std::vector<std::vector<Cell>> grid)
 {
 	// remove old movement hint squares and also blue square
 	for (auto& i : this->movements)
@@ -38,7 +38,7 @@ void Player::move(Vector vector, Cell grid[][Grid::height])
 	this->cell.draw(DARK_BLUE);
 }
 
-Cell Player::getFurthestReachableCellInDirection(Vector vector, Cell grid[][Grid::height])
+Cell Player::getFurthestReachableCellInDirection(Vector vector, std::vector<std::vector<Cell>> grid)
 {
 	int x = this->cell.x;
 	int y = this->cell.y;
@@ -102,7 +102,7 @@ Cell Player::getFurthestReachableCellInDirection(Vector vector, Cell grid[][Grid
 	}
 }
 
-void Player::getMovements(Cell grid[][Grid::height])
+void Player::getMovements(std::vector<std::vector<Cell>> grid)
 {
 	this->movements.clear();
 
