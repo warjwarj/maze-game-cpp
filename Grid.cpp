@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <stack>
 #include <vector>
@@ -9,6 +8,16 @@
 #include "Grid.h"
 #include "Game.h"
 #include "Cell.h"
+#include "Utils.h"
+
+Grid::Grid(const Game& game) :
+	game(game),
+	width(game.gridWidth),
+	height(game.gridHeight)
+{
+	create();
+	maze();
+}
 
 // Grid constructor
 void Grid::create()
@@ -20,32 +29,32 @@ void Grid::create()
 		grid.emplace_back();
 		for (int y = 0; y < height; y++)
 		{
-			grid[x].emplace_back(x, y, WHITE);
-			Cell& cell = grid[x][y];
+			grid[x].push_back(new Cell(game, x, y, WHITE));
+			Cell* cell = grid[x][y];
 			if (y == 0 || y == width - 1)
 			{
-				cell.draw(RED);
-				cell.visited = true;
-				cell.wall = true;
+				cell->draw(RED);
+				cell->visited = true;
+				cell->wall = true;
 			}
 			else
 			{
 				if (solid || wall)
 				{
-					cell.draw(BLACK);
-					cell.wall = true;
+					cell->draw(BLACK);
+					cell->wall = true;
 				}
 				if (x == 0 || x == width - 1)
 				{
-					cell.draw(RED);
-					cell.visited = true;
-					cell.wall = true;
+					cell->draw(RED);
+					cell->visited = true;
+					cell->wall = true;
 				}
 			}
 			if (x == width - 3 && y == height - 3)
 			{
-				cell.finish = true;
-				cell.draw(GREEN);
+				cell->finish = true;
+				cell->draw(GREEN);
 			}
 			wall = !wall;
 		}
@@ -56,22 +65,19 @@ void Grid::create()
 // recursive backtracking
 void Grid::maze()
 {
-	// get different number every time
 	srand(time(NULL));
 
-	// init cell_stack with a random cell from the grid
+	// random start for the maze creation algorithm
 	std::stack<Cell*> cell_stack;
-	cell_stack.push(&this->grid[rand() % (width / 2 - 1) * 2 + 2][rand() % (height / 2 - 1) * 2 + 2]);
+	cell_stack.push(this->grid[rand() % (width / 2 - 1) * 2 + 2][rand() % (height / 2 - 1) * 2 + 2]);
 
-	// white cells we can jump to, and the black walls inbetween.
-	std::vector<std::reference_wrapper<Cell>> possible_paths;
-	std::vector<std::reference_wrapper<Cell>> possible_walls;
+	std::vector<Cell*> possible_paths;
+	std::vector<Cell*> possible_walls;
 
 	bool drawing_maze = true;
 
 	int x;
 	int y;
-
 	int r;
 
 	// recursive backtracker
@@ -84,31 +90,26 @@ void Grid::maze()
 		possible_walls.clear();
 
 		// check index is in bounds
-		if (x + 2 < sizeof(this->grid)) {
-			if (!this->grid[x + 2][y].visited) {
+		if (x + 2 < sizeof(this->grid))
+			if (!this->grid[x + 2][y]->visited) {
 				possible_paths.push_back(this->grid[x + 2][y]);
 				possible_walls.push_back(this->grid[x + 1][y]);
 			}
-		}
-		if (x - 2 > 0) {
-			if (!this->grid[x - 2][y].visited) {
+		if (x - 2 > 0)
+			if (!this->grid[x - 2][y]->visited) {
 				possible_paths.push_back(this->grid[x - 2][y]);
 				possible_walls.push_back(this->grid[x - 1][y]);
 			}
-		}
-		if (y + 2 < sizeof(this->grid)) {
-			if (!this->grid[x][y + 2].visited) {
+		if (y + 2 < sizeof(this->grid))
+			if (!this->grid[x][y + 2]->visited) {
 				possible_paths.push_back(this->grid[x][y + 2]);
 				possible_walls.push_back(this->grid[x][y + 1]);
 			}
-		}
-		if (y - 2 > 0) {
-			if (!this->grid[x][y - 2].visited) {
+		if (y - 2 > 0)
+			if (!this->grid[x][y - 2]->visited) {
 				possible_paths.push_back(this->grid[x][y - 2]);
 				possible_walls.push_back(this->grid[x][y - 1]);
 			}
-		}
-
 		cell_stack.top()->visited = true;
 
 		// continue down branch
@@ -118,24 +119,20 @@ void Grid::maze()
 			r = rand() % possible_paths.size();
 
 			// random cell to jump to next
-			cell_stack.push(&possible_paths[r].get());
+			cell_stack.push(possible_paths[r]);
 
 			// make the cell white and turn it into a path
-			possible_walls[r].get().draw(WHITE);
-			possible_walls[r].get().wall = false;
-
+			possible_walls[r]->draw(WHITE);
+			possible_walls[r]->wall = false;
 			continue;
 		}
-		// backtrack to last diversion
 		else
 		{
+			// backtrack to last diversion
 			cell_stack.pop();
-
 			if (cell_stack.empty())
-			{
 				drawing_maze = false;
-			}
 		}
-		SDL_RenderPresent(Game::gameRenderer);
+		SDL_RenderPresent(game.gameRenderer);
 	}
 }

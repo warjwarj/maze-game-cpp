@@ -9,22 +9,14 @@ class Grid
 
 private:
 
-	// start dimensions, perfect for the 900 x 900 window
-	static const int width = 25;
-	static const int height = 25;
-
+	int width;
+	int height;
 	void create();
-
 	void maze();
+	const Game& game;
 
 public:
 
-	// main grid
-	std::vector<std::vector<Cell>> grid;
-
-	Grid()
-	{
-		create();
-		maze();
-	};
+	std::vector<std::vector<Cell*>> grid;
+	Grid(const Game& game);
 };

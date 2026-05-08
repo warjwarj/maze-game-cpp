@@ -12,65 +12,25 @@
 
 #include <SDL.h>
 
-// vector, a quantity that has both magnitude and direction.
-// enum below describes the four directions that the player can move in,
-// and also the two possible distances that they can travel in each direction,
-// one cell, or as many as possible until they reach a wall.
-enum Vector
-{
-	up_one,
-	down_one,
-	left_one,
-	right_one,
-	up_max,
-	down_max,
-	left_max,
-	right_max,
-	none
-};
-
-static SDL_Color BLACK = { 0, 0, 0 ,255 };
-static SDL_Color WHITE = { 255, 255, 255 ,255 };
-static SDL_Color RED = { 222, 90, 67 ,255 };
-static SDL_Color DARK_BLUE = { 15, 99, 255 ,255 };
-static SDL_Color GREY = { 92, 92, 92 ,255 };
-static SDL_Color LIGHTER_GREY = { 145, 145, 145 ,255 };
-static SDL_Color GREEN = { 28, 252, 3 ,255 };
-
-class StackUnwind : public std::exception
+class Game
 {
 private:
 
-	std::string errmsg;
+	int screenWidth;
+	int screenHeight;
 
 public:
 
-	StackUnwind(const std::string& errmsg) : errmsg(errmsg) {  };
+	int gridHeight;
+	int gridWidth;
+	int cellSize;
 
-	virtual const char* what() const noexcept override
-	{
-		return errmsg.c_str();
-	}
-};
+	SDL_Window* gameWindow;
+	SDL_Renderer* gameRenderer;
 
-struct Game
-{
-	// Screen dimension constants
-	static const int SCREEN_WIDTH = 900;
-	static const int SCREEN_HEIGHT = 900;
+	Game(int screenHeight, int screenWidth);
 
-	// The game window we render to
-	static SDL_Window* gameWindow;
-
-	// The renderer
-	static SDL_Renderer* gameRenderer;
-
-	// Starts up SDL and creates window
-	static bool init();
-
-	// check if a user has quit the game
-	static void checkQuit();
-
-	// Frees media and shuts down SDL
-	static void close();
+	bool init();
+	void checkQuit();
+	void close();
 };

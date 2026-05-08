@@ -9,26 +9,19 @@ class Cell
 private:
 
 	int cell_size = 36;
-
 	bool wall = false;
 	bool visited = false;
 	bool finish = false;
-
 	SDL_Rect rect;
 	SDL_Colour colour;
-
+	const Game& game;
 
 public:
 
-	Cell(int x, int y, SDL_Colour colour);
-	Cell() = default;
-
+	Cell(const Game& game, int x, int y, SDL_Colour colour);
 	void draw(SDL_Colour colour);
-
 	bool iswall() { return this->wall; }
-
 	bool isfinish() { return this->finish; }
-
 	int x;
 	int y;
 };
