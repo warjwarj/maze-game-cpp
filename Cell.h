@@ -8,7 +8,7 @@ class Cell
 
 private:
 
-	int cell_size = 36;
+	int cellSize;
 	bool wall = false;
 	bool visited = false;
 	bool finish = false;

@@ -23,11 +23,11 @@ Grid::Grid(const Game& game) :
 void Grid::create()
 {
 	bool solid = false;
-	for (int x = 0; x < width; x++)
+	for (int x=0; x < width; x++)
 	{
 		bool wall = false;
 		grid.emplace_back();
-		for (int y = 0; y < height; y++)
+		for (int y=0; y < height; y++)
 		{
 			grid[x].push_back(new Cell(game, x, y, WHITE));
 			Cell* cell = grid[x][y];
@@ -89,8 +89,10 @@ void Grid::maze()
 		possible_paths.clear();
 		possible_walls.clear();
 
+		int asd = sizeof(this->grid);		
+
 		// check index is in bounds
-		if (x + 2 < sizeof(this->grid))
+		if (x + 2 < this->grid.size())
 			if (!this->grid[x + 2][y]->visited) {
 				possible_paths.push_back(this->grid[x + 2][y]);
 				possible_walls.push_back(this->grid[x + 1][y]);
@@ -100,7 +102,7 @@ void Grid::maze()
 				possible_paths.push_back(this->grid[x - 2][y]);
 				possible_walls.push_back(this->grid[x - 1][y]);
 			}
-		if (y + 2 < sizeof(this->grid))
+		if (y + 2 < this->grid.size())
 			if (!this->grid[x][y + 2]->visited) {
 				possible_paths.push_back(this->grid[x][y + 2]);
 				possible_walls.push_back(this->grid[x][y + 1]);

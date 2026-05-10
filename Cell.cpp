@@ -6,15 +6,20 @@ Cell::Cell(const Game& game, int x, int y, SDL_Colour colour) :
 	game(game),
 	y(y),
 	x(x),
-	colour(colour)
+	colour(colour),
+	cellSize(game.cellSize)
 {
-	this->rect.x = x * cell_size;
-	this->rect.y = y * cell_size;
-	this->rect.w = cell_size;
-	this->rect.h = cell_size;
+	const int adjustedWidthStart = game.getScreenWidth() - game.getinnerWindowPositionX();
+	const int adjustedHeightStart = game.getScreenHeight() - game.getinnerWindowPositionY();
+
+	this->rect.x = adjustedWidthStart + (x * cellSize);
+	this->rect.y = adjustedHeightStart + (y * cellSize);
+	this->rect.w = cellSize;
+	this->rect.h = cellSize;
 
 	this->draw(colour);
 };
+
 
 void Cell::draw(SDL_Colour colour)
 {
