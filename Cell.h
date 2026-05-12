@@ -13,13 +13,13 @@ private:
 	bool visited = false;
 	bool finish = false;
 	SDL_Rect rect;
-	SDL_Colour colour;
 	const Game& game;
 
 public:
 
 	Cell(const Game& game, int x, int y, SDL_Colour colour);
-	void draw(SDL_Colour colour);
+	SDL_Colour colour;
+	void draw();
 	bool iswall() { return this->wall; }
 	bool isfinish() { return this->finish; }
 	int x;

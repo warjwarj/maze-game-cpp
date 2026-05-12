@@ -48,6 +48,7 @@ public:
 	void captureInput(int* quit, SDL_Event& e, Player& player, Grid& grid);
 	void loadGameStats();	
 	void renderText(std::string& text, int x, int y);
+	void increaseGridSize(Grid& grid);
 
 	CountdownTimer timer;
 };

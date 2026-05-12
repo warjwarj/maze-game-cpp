@@ -33,7 +33,7 @@ void Grid::create()
 			Cell* cell = grid[x][y];
 			if (y == 0 || y == width - 1)
 			{
-				cell->draw(RED);
+				cell->colour = RED;
 				cell->visited = true;
 				cell->wall = true;
 			}
@@ -41,21 +41,22 @@ void Grid::create()
 			{
 				if (solid || wall)
 				{
-					cell->draw(BLACK);
+					cell->colour = BLACK;
 					cell->wall = true;
 				}
 				if (x == 0 || x == width - 1)
 				{
-					cell->draw(RED);
+					cell->colour = RED;
 					cell->visited = true;
 					cell->wall = true;
 				}
 			}
 			if (x == width - 3 && y == height - 3)
 			{
+				cell->colour = GREEN;
 				cell->finish = true;
-				cell->draw(GREEN);
 			}
+			cell->draw();
 			wall = !wall;
 		}
 		solid = !solid;
@@ -124,8 +125,9 @@ void Grid::maze()
 			cell_stack.push(possible_paths[r]);
 
 			// make the cell white and turn it into a path
-			possible_walls[r]->draw(WHITE);
+			possible_walls[r]->colour = WHITE;
 			possible_walls[r]->wall = false;
+			possible_walls[r]->draw();
 			continue;
 		}
 		else
@@ -137,4 +139,11 @@ void Grid::maze()
 		}
 		SDL_RenderPresent(game.gameRenderer);
 	}
+}
+
+void Grid::redrawCells()
+{
+	for (auto row : grid)
+		for (Cell* c : row)
+			c->draw();
 }

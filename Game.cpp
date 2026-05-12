@@ -72,14 +72,28 @@ int Game::gameLoop(Grid& grid, Player& player)
 	SDL_Event e;
 	while (quit == 0)
 	{
+		// refresh screen
 		SDL_RenderPresent(this->gameRenderer);
+
+		// clear event queue
 		while (SDL_PollEvent(&e) != 0)
-		{
 			captureInput(&quit, e, player, grid);
-		}
+
+		// reset colour, clear renderer and redraw game
+		SDL_SetRenderDrawColor(gameRenderer, 0, 0, 0, 0);
+		SDL_RenderClear(gameRenderer);
+		grid.redrawCells();
+		loadGameStats();
+
+		// yaaay! level finished!!
 		if (player.atfinish())
 		{
 			mazesSolved += 1;
+
+			increaseGridSize(grid);
+			//if (mazesSolved % 10 == 0)
+
+			timer.addSeconds(2);
 			std::cout << player.atfinish() << std::endl;
 			break;
 		}
@@ -187,3 +201,16 @@ void Game::close()
 
 	SDL_Quit();
 };
+
+void Game::increaseGridSize(Grid& grid)
+{
+	int newWidth = gridWidth += 2;
+	int newHeight = gridHeight += 2;
+	int gridSideLengthPx = newHeight * cellSize;
+
+	if (gridSideLengthPx > getScreenHeight() * 0.8)
+		cellSize = cellSize * 0.8;
+
+	innerWindowPositionX = screenWidth - (screenWidth - (gridWidth * cellSize)) / 2;
+	innerWindowPositionY = screenWidth - (screenHeight - (gridHeight * cellSize)) / 2;
+}

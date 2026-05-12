@@ -17,8 +17,12 @@ void Player::move(Vector vector, std::vector<std::vector<Cell*>> grid)
 {
 	// remove old movement hint squares and also blue square
 	for (auto& i : movements)
-		std::get<1>(i)->draw(WHITE);
-	cell->draw(WHITE);
+	{
+		std::get<1>(i)->colour = WHITE;
+		std::get<1>(i)->draw();
+	}
+	cell->colour = WHITE;
+	cell->draw();
 
 	// make chosen movement the current cell
 	if (vector != none)
@@ -29,7 +33,8 @@ void Player::move(Vector vector, std::vector<std::vector<Cell*>> grid)
 
 	// redraw and get new cell's possible movements
 	getMovements(grid);
-	cell->draw(DARK_BLUE);
+	cell->colour = DARK_BLUE;
+	cell->draw();
 }
 
 Cell* Player::getFurthestReachableCellInDirection(Vector vector, std::vector<std::vector<Cell*>> grid)
@@ -53,7 +58,8 @@ Cell* Player::getFurthestReachableCellInDirection(Vector vector, std::vector<std
 			else
 			{
 				distance--;
-				grid[x][y - distance]->draw(LIGHTER_GREY);
+				grid[x][y - distance]->colour = LIGHTER_GREY;
+				grid[x][y - distance]->draw();
 				return grid[x][y - distance];
 			}
 		case down_max:
@@ -65,7 +71,8 @@ Cell* Player::getFurthestReachableCellInDirection(Vector vector, std::vector<std
 			else
 			{
 				distance--;
-				grid[x][y + distance]->draw(LIGHTER_GREY);
+				grid[x][y + distance]->colour = LIGHTER_GREY;
+				grid[x][y + distance]->draw();
 				return grid[x][y + distance];
 			}
 		case left_max:
@@ -77,7 +84,8 @@ Cell* Player::getFurthestReachableCellInDirection(Vector vector, std::vector<std
 			else
 			{
 				distance--;
-				grid[x - distance][y]->draw(LIGHTER_GREY);
+				grid[x - distance][y]->colour = LIGHTER_GREY;
+				grid[x - distance][y]->draw();
 				return grid[x - distance][y];
 			}
 		case right_max:
@@ -89,7 +97,8 @@ Cell* Player::getFurthestReachableCellInDirection(Vector vector, std::vector<std
 			else
 			{
 				distance--;
-				grid[x + distance][y]->draw(LIGHTER_GREY);
+				grid[x + distance][y]->colour = LIGHTER_GREY;
+				grid[x + distance][y]->draw();
 				return grid[x + distance][y];
 			}
 		}

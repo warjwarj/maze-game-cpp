@@ -17,11 +17,11 @@ Cell::Cell(const Game& game, int x, int y, SDL_Colour colour) :
 	this->rect.w = cellSize;
 	this->rect.h = cellSize;
 
-	this->draw(colour);
+	this->draw();
 };
 
 
-void Cell::draw(SDL_Colour colour)
+void Cell::draw()
 {
 	SDL_SetRenderDrawColor(this->game.gameRenderer, colour.r, colour.g, colour.b, colour.a);
 	SDL_RenderFillRect(this->game.gameRenderer, &this->rect);

@@ -9,14 +9,19 @@ class Grid
 
 private:
 
+	const Game& game;
 	int width;
 	int height;
+
 	void create();
 	void maze();
-	const Game& game;
 
 public:
 
 	std::vector<std::vector<Cell*>> grid;
+
 	Grid(const Game& game);
+
+	void redrawCells();
+	void setDimensions(int width, int height, int cellSize);
 };
