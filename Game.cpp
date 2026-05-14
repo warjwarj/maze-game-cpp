@@ -212,8 +212,10 @@ int Game::getCellSize(int increasedGridHeight, int maxGridHeight)
 
 void Game::increaseGridSize(Grid& grid)
 {
-	// this depends on the grid being a square
+	int newWidth = gridWidth += 2;
 	int newHeight = gridHeight += 2;
+
+	// this depends on the grid being a square
 	int increasedGridSize = newHeight * cellSize;
 	int maxGridSize = getScreenHeight() * 0.8;
 
