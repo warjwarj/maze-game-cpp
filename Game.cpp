@@ -23,7 +23,7 @@ Game::Game(int h, int w, int startSecs) :
 
 	gridHeight = 13;
 	gridWidth = 13;
-	cellSize = 36;
+	cellSize = screenHeight / 25;
 
 	innerWindowPositionX = screenWidth - (screenWidth - (gridWidth * cellSize)) / 2;
 	innerWindowPositionY = screenWidth - (screenHeight - (gridHeight * cellSize)) / 2;
@@ -91,7 +91,6 @@ int Game::gameLoop(Grid& grid, Player& player)
 			mazesSolved += 1;
 
 			increaseGridSize(grid);
-			//if (mazesSolved % 10 == 0)
 
 			timer.addSeconds(2);
 			std::cout << player.atfinish() << std::endl;
@@ -202,14 +201,24 @@ void Game::close()
 	SDL_Quit();
 };
 
+int Game::getCellSize(int increasedGridHeight, int maxGridHeight)
+{
+	int newCellSize = cellSize;
+	if (increasedGridHeight > maxGridHeight)
+		while ((newCellSize * gridHeight) > maxGridHeight)
+			newCellSize -= 1;
+	return newCellSize;
+}
+
 void Game::increaseGridSize(Grid& grid)
 {
-	int newWidth = gridWidth += 2;
+	// this depends on the grid being a square
 	int newHeight = gridHeight += 2;
-	int gridSideLengthPx = newHeight * cellSize;
+	int increasedGridSize = newHeight * cellSize;
+	int maxGridSize = getScreenHeight() * 0.8;
 
-	if (gridSideLengthPx > getScreenHeight() * 0.8)
-		cellSize = cellSize * 0.8;
+	if (increasedGridSize > maxGridSize)
+		cellSize = getCellSize(increasedGridSize, maxGridSize);
 
 	innerWindowPositionX = screenWidth - (screenWidth - (gridWidth * cellSize)) / 2;
 	innerWindowPositionY = screenWidth - (screenHeight - (gridHeight * cellSize)) / 2;

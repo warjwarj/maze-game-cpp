@@ -49,6 +49,7 @@ public:
 	void loadGameStats();	
 	void renderText(std::string& text, int x, int y);
 	void increaseGridSize(Grid& grid);
+	int getCellSize(int increasedGridSize, int maxGridSize);
 
 	CountdownTimer timer;
 };
