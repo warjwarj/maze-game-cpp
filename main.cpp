@@ -21,7 +21,7 @@ int main(int argc, char* args[])
 	SDL_GetCurrentDisplayMode(0, &dm);
 
 	// This is where we hold all the game logic
-	Game game(dm.h, dm.w, 30);
+	Game game(dm.h, dm.w, 3);
 
 	// Start up SDL and create window
 	if (!game.init())
@@ -30,15 +30,14 @@ int main(int argc, char* args[])
 		return 0;
 	}
 
-	bool quit = 0;
-	while (quit == 0)
+	GameState gs = PLAYING;
+	while (gs != SDL_QUIT_SO_QUIT_DUUUH)
 	{
 		SDL_RenderClear(game.gameRenderer);
-		game.loadGameStats();
 
 		Grid grid = Grid(game);
 		Player player = Player(grid.grid);
-		quit = game.gameLoop(grid, player);
+		game.gameLoop(&gs, grid, player);
 
 		SDL_SetRenderDrawColor(game.gameRenderer, 0, 0, 0, 0);
 	}

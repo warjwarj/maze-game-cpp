@@ -26,3 +26,11 @@ static SDL_Color DARK_BLUE = { 15, 99, 255 ,255 };
 static SDL_Color GREY = { 92, 92, 92 ,255 };
 static SDL_Color LIGHTER_GREY = { 145, 145, 145 ,255 };
 static SDL_Color GREEN = { 28, 252, 3 ,255 };
+
+enum GameState
+{
+	SDL_QUIT_SO_QUIT_DUUUH = 10,
+	PLAYING = 20,
+	LEVEL_FINISHED = 30,
+	GAME_OVER = 40
+};

@@ -9,6 +9,7 @@
 #include "Grid.h"
 #include "Player.h"
 #include "CountdownTimer.h"
+#include "Utils.h"
 
 Game::Game(int h, int w, int startSecs) :
 	timer(startSecs)
@@ -66,38 +67,50 @@ bool Game::init()
 	return true;
 };
 
-int Game::gameLoop(Grid& grid, Player& player)
+void Game::gameLoop(GameState* gs, Grid& grid, Player& player)
 {
-	int quit = 0;
 	SDL_Event e;
-	while (quit == 0)
+	while (*gs != SDL_QUIT_SO_QUIT_DUUUH)
 	{
-		// refresh screen
-		SDL_RenderPresent(this->gameRenderer);
-
-		// clear event queue
 		while (SDL_PollEvent(&e) != 0)
-			captureInput(&quit, e, player, grid);
+			captureInput(gs, e, player, grid);
+
+		if (*gs != PLAYING)
+			continue;
+
+		// game over :(
+		if (timer.getSeconds() <= 0)
+		{
+			*gs = GAME_OVER;
+			std::string gotxt = "GAME - IS - OOOOOVER!!";
+			showFullScreenOverlay();
+			renderText(gotxt, screenWidth / 2, screenHeight / 2, true);
+			SDL_RenderPresent(this->gameRenderer);
+			continue;
+		}
 
 		// reset colour, clear renderer and redraw game
 		SDL_SetRenderDrawColor(gameRenderer, 0, 0, 0, 0);
 		SDL_RenderClear(gameRenderer);
+
+		// draw stuff
 		grid.redrawCells();
 		loadGameStats();
+
+		// refresh screen
+		SDL_RenderPresent(this->gameRenderer);
 
 		// yaaay! level finished!!
 		if (player.atfinish())
 		{
 			mazesSolved += 1;
-
-			increaseGridSize(grid);
-
+			if (mazesSolved % 10 == 0)
+				increaseGridSize(grid);
 			timer.addSeconds(2);
 			std::cout << player.atfinish() << std::endl;
 			break;
 		}
 	}
-	return quit;
 }
 
 void Game::loadGameStats()
@@ -108,15 +121,23 @@ void Game::loadGameStats()
 	renderText(label, 10, 10);
 }
 
-void Game::renderText(std::string& text, int x, int y)
+void Game::renderText(std::string& text, int x, int y, bool centerIt)
 {
-	SDL_Surface* surface = TTF_RenderText_Solid(gameFont, text.c_str(), WHITE);
+	SDL_Surface* surface = TTF_RenderText_Blended(gameFont, text.c_str(), WHITE);
 	if (!surface) return;
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(gameRenderer, surface);
 
+	int offsetForCenteringWidth = 0;
+	int offsetForCenteringHeight = 0;
+	if (centerIt)
+	{
+		offsetForCenteringWidth = surface->w / 2;
+		offsetForCenteringHeight = surface->h / 2;
+	}
+
 	SDL_Rect dst;
-	dst.x = x;
-	dst.y = y;
+	dst.x = x - offsetForCenteringWidth;
+	dst.y = y - offsetForCenteringHeight;
 	dst.w = surface->w;
 	dst.h = surface->h;
 	SDL_RenderCopy(gameRenderer, texture, NULL, &dst);
@@ -125,12 +146,57 @@ void Game::renderText(std::string& text, int x, int y)
 	SDL_DestroyTexture(texture);
 }
 
-void Game::captureInput(int* quit, SDL_Event& e, Player& player, Grid& grid)
+void Game::close()
+{
+	TTF_CloseFont(gameFont);
+	TTF_Quit();
+
+	SDL_DestroyRenderer(gameRenderer);
+	SDL_DestroyWindow(gameWindow);
+
+	gameWindow = nullptr;
+	gameRenderer = nullptr;
+
+	SDL_Quit();
+};
+
+int Game::getCellSize(int increasedGridHeight, int maxGridHeight)
+{
+	int newCellSize = cellSize;
+	if (increasedGridHeight > maxGridHeight)
+		while ((newCellSize * gridHeight) > maxGridHeight)
+			newCellSize -= 1;
+	return newCellSize;
+}
+
+void Game::increaseGridSize(Grid& grid)
+{
+	int newWidth = gridWidth += 2;
+	int newHeight = gridHeight += 2;
+
+	// this depends on the grid being a square
+	int increasedGridSize = newHeight * cellSize;
+	int maxGridSize = getScreenHeight() * 0.8;
+	cellSize = getCellSize(increasedGridSize, maxGridSize);
+
+	innerWindowPositionX = screenWidth - (screenWidth - (gridWidth * cellSize)) / 2;
+	innerWindowPositionY = screenWidth - (screenHeight - (gridHeight * cellSize)) / 2;
+}
+
+void Game::showFullScreenOverlay()
+{
+	SDL_SetRenderDrawBlendMode(gameRenderer, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(gameRenderer, 0, 0, 0, 200);
+	SDL_Rect full = { 0, 0, screenWidth, screenHeight};
+	SDL_RenderFillRect(gameRenderer, &full);
+}
+
+void Game::captureInput(GameState* quit, SDL_Event& e, Player& player, Grid& grid)
 {
 	switch (e.type)
 	{
 	case SDL_QUIT:
-		*quit = 1;
+		*quit = SDL_QUIT_SO_QUIT_DUUUH;
 		break;
 	case SDL_KEYDOWN:
 		switch (e.key.keysym.sym)
@@ -185,43 +251,4 @@ void Game::captureInput(int* quit, SDL_Event& e, Player& player, Grid& grid)
 			break;
 		}
 	}
-}
-
-void Game::close()
-{
-	TTF_CloseFont(gameFont);
-	TTF_Quit();
-
-	SDL_DestroyRenderer(gameRenderer);
-	SDL_DestroyWindow(gameWindow);
-
-	gameWindow = nullptr;
-	gameRenderer = nullptr;
-
-	SDL_Quit();
-};
-
-int Game::getCellSize(int increasedGridHeight, int maxGridHeight)
-{
-	int newCellSize = cellSize;
-	if (increasedGridHeight > maxGridHeight)
-		while ((newCellSize * gridHeight) > maxGridHeight)
-			newCellSize -= 1;
-	return newCellSize;
-}
-
-void Game::increaseGridSize(Grid& grid)
-{
-	int newWidth = gridWidth += 2;
-	int newHeight = gridHeight += 2;
-
-	// this depends on the grid being a square
-	int increasedGridSize = newHeight * cellSize;
-	int maxGridSize = getScreenHeight() * 0.8;
-
-	if (increasedGridSize > maxGridSize)
-		cellSize = getCellSize(increasedGridSize, maxGridSize);
-
-	innerWindowPositionX = screenWidth - (screenWidth - (gridWidth * cellSize)) / 2;
-	innerWindowPositionY = screenWidth - (screenHeight - (gridHeight * cellSize)) / 2;
 }

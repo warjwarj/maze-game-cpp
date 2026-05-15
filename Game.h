@@ -10,6 +10,7 @@
 
 class Grid;
 class Player;
+enum GameState;
 
 class Game
 {
@@ -44,12 +45,13 @@ public:
 	bool init();
 	void close();
 
-	int gameLoop(Grid& grid, Player& player);
-	void captureInput(int* quit, SDL_Event& e, Player& player, Grid& grid);
-	void loadGameStats();	
-	void renderText(std::string& text, int x, int y);
+	void gameLoop(GameState* gs, Grid& grid, Player& player);
+	void captureInput(GameState* quit, SDL_Event& e, Player& player, Grid& grid);
+	void loadGameStats();
+	void renderText(std::string& text, int x, int y, bool centerIt = false);
 	void increaseGridSize(Grid& grid);
 	int getCellSize(int increasedGridSize, int maxGridSize);
+	void showFullScreenOverlay();
 
 	CountdownTimer timer;
 };
