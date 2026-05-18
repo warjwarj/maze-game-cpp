@@ -1,24 +1,31 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <iomanip>
+#include <iostream>
 
 #include "CountdownTimer.h"
 
 CountdownTimer::CountdownTimer(int s) :
-    countdownLength(s),
-    startTime(std::chrono::steady_clock::now())
+    countdownLength(s)
 {
+    reset();
+}
+
+void CountdownTimer::reset()
+{
+    additionalSeconds = 0;
+    startTime = std::chrono::steady_clock::now();
 }
 
 void CountdownTimer::addSeconds(int s)
 {
-    countdownLength += s;
+    additionalSeconds += s;
 }
 
-int CountdownTimer::getSeconds()
+double CountdownTimer::getSeconds()
 {
-    auto secs = std::chrono::seconds(countdownLength);
-    auto endTime = startTime + std::chrono::seconds(countdownLength);
+    auto endTime = startTime + std::chrono::seconds(countdownLength + additionalSeconds);
     auto diff = endTime - std::chrono::steady_clock::now();
-    return std::chrono::duration_cast<std::chrono::seconds>(diff).count();
+    return std::round(std::chrono::duration<double>(diff).count() * 100) / 100;
 }

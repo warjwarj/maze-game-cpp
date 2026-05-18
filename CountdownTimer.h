@@ -8,11 +8,13 @@ private:
 
 	std::chrono::steady_clock::time_point startTime;
 	int countdownLength;
+	int additionalSeconds = 0;
 
 public:
 
 	CountdownTimer(int s);
 
 	void addSeconds(int s);
-	int getSeconds();
+	double getSeconds();
+	void reset();
 };

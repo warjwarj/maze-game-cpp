@@ -2,11 +2,14 @@
 
 #include <exception>
 #include <string>
+#include <vector>
 
 #include <SDL.h>
 #include <SDL_ttf.h>
 
 #include "CountdownTimer.h"
+#include "Clickable.h"
+#include "Utils.h"
 
 class Grid;
 class Player;
@@ -18,13 +21,14 @@ private:
 
 	int screenWidth;
 	int screenHeight;
-
 	int innerWindowPositionX;
 	int innerWindowPositionY;
-
 	int mazesSolved;
+	std::vector<Clickable> clickables;
 
 public:
+
+	GameState* state;
 
 	int getMazesSolved() const { return mazesSolved; }
 	int getinnerWindowPositionX() const { return innerWindowPositionX; }
@@ -44,14 +48,17 @@ public:
 
 	bool init();
 	void close();
+	void reset();
 
-	void gameLoop(GameState* gs, Grid& grid, Player& player);
-	void captureInput(GameState* quit, SDL_Event& e, Player& player, Grid& grid);
+	void gameLoop();
+	void captureInput(SDL_Event& e, Player& player, Grid& grid);
 	void loadGameStats();
-	void renderText(std::string& text, int x, int y, bool centerIt = false);
+	void renderText(const std::string& text, int x, int y, bool centered = false) const;
 	void increaseGridSize(Grid& grid);
 	int getCellSize(int increasedGridSize, int maxGridSize);
 	void showFullScreenOverlay();
+	void handleGameOver();
+	void handleLevelFinished(Grid& grid, Player& player);
 
 	CountdownTimer timer;
 };

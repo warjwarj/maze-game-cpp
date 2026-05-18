@@ -30,17 +30,10 @@ int main(int argc, char* args[])
 		return 0;
 	}
 
-	GameState gs = PLAYING;
-	while (gs != SDL_QUIT_SO_QUIT_DUUUH)
-	{
-		SDL_RenderClear(game.gameRenderer);
+	GameState state = PLAYING;
+	game.state = &state;
+	game.gameLoop();
 
-		Grid grid = Grid(game);
-		Player player = Player(grid.grid);
-		game.gameLoop(&gs, grid, player);
-
-		SDL_SetRenderDrawColor(game.gameRenderer, 0, 0, 0, 0);
-	}
 	// Free resources and close SDL
 	game.close();
 	return 0;

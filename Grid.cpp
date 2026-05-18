@@ -19,7 +19,7 @@ Grid::Grid(const Game& game) :
 	maze();
 }
 
-// Grid constructor
+
 void Grid::create()
 {
 	bool solid = false;
